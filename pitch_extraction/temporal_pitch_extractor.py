@@ -10,15 +10,42 @@ class TemporalPitchExtractor(object):
         pass
 
     def extract(self, spikes, sample_rate):
-        # TODO: From the auditory nerve activity compute the autocorrelation of each nerve activity
+		channels_data = spikes
+		number_of_channels = len(channels_data)
+		number_of_points_in_channel = len(channels_data[0])
+		lmda = 40000
+		lower_boundary = 0
+		upper_boundary = 24000
 
+		dt = 1.0/sample_rate 
+		step_tau = int((upper_boundary-lower_boundary)/27) ## was constant 1000 ## ensure that integer
+		number_of_iterations = len(np.r_[lower_boundary:upper_boundary:step_tau]) ##(upper_boundary-lower_boundary)/step_tau
+        
+		# TODO: From the auditory nerve activity compute the autocorrelation of each nerve activity
+		iteration = np.zeros(number_of_iterations)
+		for i in range(number_of_iterations):
+			for  j in range(number_of_channels):
+				iteration[i] += integration(lower_boundary, upper_boundary, sample_rate, dt, channels_data, j, i*step_tau, lmda)
+		
         # TODO: Sum these autocorrelation across nerves to construct the summary autocorrelation
-
+		iteration = iteration/iteration[0] ##normalization
+		
         # TODO: Extract the argument of the first non-zero peak in the autocorrelation
-
+		peak_tau = step_tau*argrelextrema(iteration, np.greater)[0][iteration[argrelextrema(iteration, np.greater)[0]].argmax()]
+		
         # TODO: Pitch matching maybe?
 
         # TODO: Return pitch estimate
-        return 0.0
+        return 1.0/(peak_tau*dt)
 
-
+	def acor(channels_data, channel_index, tau, t, t_current, lmda):
+		"body of autocorrelation integral"
+		return channels_data[channel_index,t_current]*channels_data[channel_index,t_current-tau]*np.exp((-t_current+t)*1.0/lmda)
+		
+	def integration(lower_boundary, upper_boundary, sample_rate, dt, channels_data, channel_index, tau, lmda):
+		"trapezoidal integration of acor"
+		result = acor(channels_data, channel_index, tau, upper_boundary, 0+tau, lmda)*dt/2.0 
+		result = result + acor(channels_data, channel_index, tau, upper_boundary, upper_boundary+tau, lmda)*dt/2.0
+		for i in range(1, int(round((upper_boundary-lower_boundary)/(sample_rate*dt*1.0))-1)):
+			result = result + acor(channels_data, channel_index, tau, upper_boundary, i+tau, lmda)*dt*1.0 
+		return result
