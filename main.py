@@ -1,4 +1,5 @@
 import sys
+import logging
 
 from pipeline import Pipeline
 from transduction.brian_transducer import BrianTransducer
@@ -16,6 +17,9 @@ def main():
     # TODO: Compare human/model recognition
     # TODO: Maybe save (for instance) spectral images of sounds that failed
 
+    # Setup logging
+    logging.basicConfig(filename='pitch_perception.log', level=logging.INFO)
+
     # Set dependencies
     transducer = BrianTransducer()
     pitch_extractor = NaivePitchExtractor()
@@ -25,6 +29,9 @@ def main():
 
     # Run processing
     pitch = pipeline.process(fname)
+
+    log_string = 'File: %s\tPitch: %i' % (fname, pitch)
+    logging.info(log_string)
 
     # Output final pitch
     print pitch
