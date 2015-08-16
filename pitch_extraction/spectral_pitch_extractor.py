@@ -1,4 +1,4 @@
-class SpatialPitchExtractor(object):
+class SpectralPitchExtractor(object):
     """
     A computational model of the human's hearing pitch extraction stage, using the spacial model
     """
