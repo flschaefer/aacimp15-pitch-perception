@@ -1,4 +1,5 @@
 import sys
+import glob
 import logging
 
 from pipeline import Pipeline
@@ -11,9 +12,16 @@ def main():
     if len(sys.argv) != 2:
         print 'Please use the application as follows: python main.py <filepath>.wav'
         sys.exit(2)
-    fname = sys.argv[1]
+    fpath = sys.argv[1]
 
-    # TODO: Batch processing of sounds
+    # If the file path ends with .wav only the given file will be processed
+    # Else we assume that the input is a path to all the .wav files to be batch processed
+    audio_files = []
+    if fpath.endswith('.wav'):
+        audio_files.append(fpath)
+    else:
+        audio_files.extend(glob.glob(fpath + '/*.wav'))
+
     # TODO: Compare human/model recognition
     # TODO: Maybe save (for instance) spectral images of sounds that failed
 
@@ -27,14 +35,15 @@ def main():
     # Init pipeline
     pipeline = Pipeline(transducer, pitch_extractor, test_mode=False)
 
-    # Run processing
-    pitch = pipeline.process(fname)
+    for af in audio_files:
+        # Run processing
+        pitch = pipeline.process(af)
 
-    log_string = 'File: %s\tPitch: %i' % (fname, pitch)
-    logging.info(log_string)
+        log_string = 'File: %s\tPitch: %i' % (af, pitch)
+        logging.info(log_string)
 
-    # Output final pitch
-    print pitch
+        # Output final pitch
+        print log_string
 
 if __name__ == "__main__":
     main()
