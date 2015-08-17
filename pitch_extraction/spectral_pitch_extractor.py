@@ -7,16 +7,14 @@ class SpectralPitchExtractor(object):
     A computational model of the human's hearing pitch extraction stage, using the spacial model
     """
 
-    def __init__(self):
+    def __init__(self, n_channels):
         """
         Empty constructor. Fill with code if needed
         """
-        pass
+        self.n_channels = n_channels
 
     def extract(self, spikes, sample_rate):
-        Nf = 300
-        # Channel frequinces are unnessesary as well as Nf
-        cf = erbspace(20 * Hz, 20 * kHz, Nf)
+        cf = erbspace(20*Hz, 20*kHz, self.n_channels)
         # TODO: Compute excitatory pattern (for each auditory nerve, sum up along the time dimension)
         sa = np.sum(spikes, axis=0)
         log_sa = np.log2(sa)
@@ -24,7 +22,7 @@ class SpectralPitchExtractor(object):
         # TODO: Use a pitch estimation method like pattern Matching, wightman, goldstein, Terhardt,...
 
         # I used Terhardt's virtual pitch
-        peaks_lst = self.peaks(sa, cf, Nf)
+        peaks_lst = self.peaks(sa, cf, len(cf))
         N = peaks_lst.size
 
         w = 1.
@@ -42,7 +40,7 @@ class SpectralPitchExtractor(object):
         return cf[index_score.tolist().index(max(index_score))]
 
     # Function for extraction peaks in spikes activity
-    def peaks(self, spikes_sum, cf, Nf=3000):
+    def peaks(self, spikes_sum, cf, Nf):
         e = spikes_sum / np.max(spikes_sum)
         l = int(100 * Nf / 3000.)
         w = np.exp(-((np.arange(l) - l / 2) / float(l)) ** 2 * 20.)
