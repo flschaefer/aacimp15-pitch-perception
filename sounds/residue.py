@@ -43,18 +43,14 @@ def residue(d=0.2,n=10,df=50.,fs=44100.,m=0.9,g=200.):
 
 # settings for the residue
 d = 0.2
-n = 3
-df = 50.
 g = 200.
 fs = 44100.
 m = 0.9
+df = 50.
 ns = [9, 10, 11]
 dfs = np.arange(-6+1,6)*df
 
 if __name__ == '__main__':
-
-    sound = Residue(n,df,m,g)
-    sound.save_to_wav(fs, d)
 
 
     for n in ns:

@@ -35,7 +35,7 @@ def main():
     logging.basicConfig(filename='pitch_perception.log', level=logging.INFO)
 
     # Set dependencies
-    N_channels = 200
+    N_channels = 100
     transducer = BrianTransducer(N_channels)
     available_pitch_extractors = {'naive': NaivePitchExtractor, 'spectral': SpectralPitchExtractor(N_channels),
                                   'temporal': TemporalPitchExtractor, 'xcorr':XcorrPitchExtractor(N_channels) }

@@ -21,9 +21,13 @@ class XcorrPitchExtractor(object):
 
         # Autocorrelation across all channels
         corr= np.zeros((2*t-1,))
+        dt = 1./sample_rate
         for r in spikes.T:
             corr += np.correlate(r, r, mode='full')
         corr = corr[corr.size/2:]
+        corr = corr/(np.arange(0,len(corr))*dt)
+        plt.plot(corr)
+        plt.show()
         ts,vs = get_peaks(corr,sample_rate)
         imax = np.argmax(vs)
         return 1./ts[imax]
