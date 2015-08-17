@@ -12,7 +12,7 @@ class BrianTransducer(Transducer):
     A computational model of the human's hearing transduction stage, using the functionality of the brian library
     """
 
-    def __init__(self, n_channels=300.):
+    def __init__(self, n_channels):
         self.n_channels = n_channels
 
     def get_spikes(self,samples, sample_rate):
