@@ -6,6 +6,9 @@ from pipeline import Pipeline
 from transduction.brian_transducer import BrianTransducer
 from pitch_extraction.naive_pitch_extractor import NaivePitchExtractor
 from pitch_extraction.temporal_pitch_extractor import TemporalPitchExtractor
+from pitch_extraction.spectral_pitch_extractor import SpectralPitchExtractor
+from csv_exporter import CsvExporter
+
 
 def main():
     # Read input file path from command line argument
@@ -30,10 +33,13 @@ def main():
 
     # Set dependencies
     transducer = BrianTransducer()
-    pitch_extractor = TemporalPitchExtractor()
+    pitch_extractor = SpectralPitchExtractor()
 
     # Init pipeline
     pipeline = Pipeline(transducer, pitch_extractor, test_mode=False)
+
+    # Collect results
+    results = []
 
     for af in audio_files:
         # Run processing
@@ -44,6 +50,11 @@ def main():
 
         # Output final pitch
         print log_string
+
+        results.append((af, pitch))
+
+    # Export results
+    CsvExporter.export('results.csv', pitch_extractor.__class__.__name__, results)
 
 if __name__ == "__main__":
     main()
