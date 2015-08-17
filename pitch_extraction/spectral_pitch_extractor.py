@@ -18,13 +18,13 @@ class SpectralPitchExtractor(object):
         # Channel frequinces are unnessesary as well as Nf
         cf = erbspace(20 * Hz, 20 * kHz, Nf)
         # TODO: Compute excitatory pattern (for each auditory nerve, sum up along the time dimension)
-        sa = np.sum(spikes, axis=0)
-        log_sa = np.log2(sa)
+        spikes_sum = np.sum(spikes, axis=0)
+        log_sa = np.log2(spikes_sum)
 
         # TODO: Use a pitch estimation method like pattern Matching, wightman, goldstein, Terhardt,...
 
         # I took Terhardt's virtual pitch
-        peaks_lst = self.peaks(log_sa, cf, Nf)
+        peaks_lst = self.peaks(spikes_sum, cf, Nf)
         N = peaks_lst.size
 
         w = 1.
