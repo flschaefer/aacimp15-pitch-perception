@@ -5,7 +5,7 @@ import logging
 from pipeline import Pipeline
 from transduction.brian_transducer import BrianTransducer
 from pitch_extraction.naive_pitch_extractor import NaivePitchExtractor
-
+from pitch_extraction.temporal_pitch_extractor import TemporalPitchExtractor
 
 def main():
     # Read input file path from command line argument
@@ -30,7 +30,7 @@ def main():
 
     # Set dependencies
     transducer = BrianTransducer()
-    pitch_extractor = NaivePitchExtractor()
+    pitch_extractor = TemporalPitchExtractor()
 
     # Init pipeline
     pipeline = Pipeline(transducer, pitch_extractor, test_mode=False)
