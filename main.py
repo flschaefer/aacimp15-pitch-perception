@@ -6,6 +6,8 @@ from pipeline import Pipeline
 from transduction.brian_transducer import BrianTransducer
 from pitch_extraction.naive_pitch_extractor import NaivePitchExtractor
 from pitch_extraction.temporal_pitch_extractor import TemporalPitchExtractor
+from pitch_extraction.xcorr_pitch_extractor import XcorrPitchExtractor
+
 from pitch_extraction.spectral_pitch_extractor import SpectralPitchExtractor
 from csv_exporter import CsvExporter
 from config import Config
@@ -33,9 +35,10 @@ def main():
     logging.basicConfig(filename='pitch_perception.log', level=logging.INFO)
 
     # Set dependencies
-    transducer = BrianTransducer()
-    available_pitch_extractors = {'naive': NaivePitchExtractor, 'spectral': SpectralPitchExtractor(),
-                                  'temporal': TemporalPitchExtractor}
+    N_channels = 200
+    transducer = BrianTransducer(N_channels)
+    available_pitch_extractors = {'naive': NaivePitchExtractor, 'spectral': SpectralPitchExtractor(N_channels),
+                                  'temporal': TemporalPitchExtractor, 'xcorr':XcorrPitchExtractor(N_channels) }
     pitch_extractor = available_pitch_extractors[Config.get_config_option('pitch_extraction')]
 
     # Init pipeline
