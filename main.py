@@ -7,7 +7,6 @@ from transduction.brian_transducer import BrianTransducer
 from pitch_extraction.naive_pitch_extractor import NaivePitchExtractor
 from pitch_extraction.temporal_pitch_extractor import TemporalPitchExtractor
 from pitch_extraction.xcorr_pitch_extractor import XcorrPitchExtractor
-
 from pitch_extraction.spectral_pitch_extractor import SpectralPitchExtractor
 from csv_exporter import CsvExporter
 from config import Config
@@ -29,16 +28,17 @@ def main():
         audio_files.extend(glob.glob(fpath + '/*.wav'))
 
     # TODO: Compare human/model recognition
-    # TODO: Maybe save (for instance) spectral images of sounds that failed
+    # TODO: Maybe save (for instance) spectral images of sound_generation that failed
 
     # Setup logging
     logging.basicConfig(filename='pitch_perception.log', level=logging.INFO)
 
-    # Set dependencies
-    N_channels = 100
-    transducer = BrianTransducer(N_channels)
-    available_pitch_extractors = {'naive': NaivePitchExtractor, 'spectral': SpectralPitchExtractor(N_channels),
-                                  'temporal': TemporalPitchExtractor, 'xcorr':XcorrPitchExtractor(N_channels) }
+    n_channels = int(Config.get_config_option('n_channels'))
+
+    transducer = BrianTransducer(n_channels)
+    available_pitch_extractors = {'naive': NaivePitchExtractor, 'spectral': SpectralPitchExtractor(n_channels),
+                                  'temporal': TemporalPitchExtractor, 'xcorr': XcorrPitchExtractor(n_channels)}
+
     pitch_extractor = available_pitch_extractors[Config.get_config_option('pitch_extraction')]
 
     # Init pipeline

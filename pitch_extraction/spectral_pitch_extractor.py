@@ -42,7 +42,7 @@ class SpectralPitchExtractor(object):
     # Function for extraction peaks in spikes activity
     def peaks(self, spikes_sum, cf, Nf):
         e = spikes_sum / np.max(spikes_sum)
-        l = int(100 * Nf / 3000.)
+        l = int(100 * Nf / self.n_channels)
         w = np.exp(-((np.arange(l) - l / 2) / float(l)) ** 2 * 20.)
 
         e = np.convolve(e, w, mode='same')

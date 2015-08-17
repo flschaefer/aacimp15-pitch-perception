@@ -1,9 +1,11 @@
+import os
 from abc import ABCMeta, abstractmethod
-from scipy.io.wavfile import write
+from scipy.io import wavfile
 
-class SoundGeneration(object):
+
+class Sound(object):
     """
-    Abstract class for all modules creating sounds
+    Abstract class for all modules creating sound_generation
     """
     __metaclass__ = ABCMeta
 
@@ -16,8 +18,6 @@ class SoundGeneration(object):
         """
         pass
 
-
-
     def save_to_wav(self, fs, d):
         """
         Return the waveform as an array
@@ -25,4 +25,9 @@ class SoundGeneration(object):
         :return: The estimated pitch
         """
         x = self.generate(fs, d)
-        write(str(self),fs,x)
+
+        dir_name = 'sound_generation/generated_sounds/'
+        if not os.path.exists(dir_name):
+            os.makedirs(dir_name)
+
+        wavfile.write(dir_name + str(self), fs, x)
