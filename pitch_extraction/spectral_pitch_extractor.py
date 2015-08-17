@@ -10,7 +10,7 @@
         pass
 
     def extract(self,a,cf=[],Nf=3000,fs=44100):
-        #Channel frequinces are unnessesary
+        #Channel frequinces are unnessesary as well as Nf
         if cf.size==0:
            cf = erbspace(20*Hz, 20*kHz, Nf)
         # TODO: Compute excitatory pattern (for each auditory nerve, sum up along the time dimension)
@@ -20,7 +20,7 @@
         # TODO: Use a pitch estimation method like pattern Matching, wightman, goldstein, Terhardt,...
 
         #I took Terhardt's virtual pitch
-        peaks_lst=peaks(log_sa)      
+        peaks_lst=peaks(log_sa,Nf)      
         N=peaks_lst.size    
     
         w=1.    
@@ -39,9 +39,8 @@
     
 
     # Function for extraction peaks in spikes activity
-    def peaks(spikes_sum):
-        e = spikes_sum/np.max(spikes_sum)
-        Nf=3000
+    def peaks(spikes_sum,Nf=3000):
+        e = spikes_sum/np.max(spikes_sum)        
         l = int(100*Nf/3000.)   
         w =np.exp(-((np.arange(l)-l/2)/float(l))**2 *20.)
         
