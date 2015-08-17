@@ -1,4 +1,7 @@
-﻿class SpectralPitchExtractor(object):
+﻿from brian import *
+from brian.hears import *
+
+class SpectralPitchExtractor(object):
     """
     A computational model of the human's hearing pitch extraction stage, using the spacial model
     """
