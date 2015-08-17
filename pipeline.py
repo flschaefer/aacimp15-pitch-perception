@@ -46,8 +46,9 @@ class Pipeline(object):
 
         samples, sample_rate = sound[1], sound[0]
 
-        spikes = self.transducer.get_spikes(samples, sample_rate)
+        #spikes = self.transducer.get_spikes(samples, sample_rate)
+        cochleogram = self.transducer.get_cochleogram(samples, sample_rate)
 
-        pitch = self.pitch_extractor.extract(spikes, sample_rate)
+        pitch = self.pitch_extractor.extract(cochleogram, sample_rate)
 
         return pitch
