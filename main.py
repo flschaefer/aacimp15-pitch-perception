@@ -8,6 +8,7 @@ from pitch_extraction.naive_pitch_extractor import NaivePitchExtractor
 from pitch_extraction.temporal_pitch_extractor import TemporalPitchExtractor
 from pitch_extraction.spectral_pitch_extractor import SpectralPitchExtractor
 from csv_exporter import CsvExporter
+from config import Config
 
 
 def main():
@@ -33,7 +34,9 @@ def main():
 
     # Set dependencies
     transducer = BrianTransducer()
-    pitch_extractor = SpectralPitchExtractor()
+    available_pitch_extractors = {'naive': NaivePitchExtractor, 'spectral': SpectralPitchExtractor(),
+                                  'temporal': TemporalPitchExtractor}
+    pitch_extractor = available_pitch_extractors[Config.get_config_option('pitch_extraction')]
 
     # Init pipeline
     pipeline = Pipeline(transducer, pitch_extractor, test_mode=False)
@@ -55,6 +58,7 @@ def main():
 
     # Export results
     CsvExporter.export('results.csv', pitch_extractor.__class__.__name__, results)
+
 
 if __name__ == "__main__":
     main()
