@@ -27,14 +27,16 @@ def main():
         audio_files.extend(glob.glob(fpath + '/*.wav'))
 
     # TODO: Compare human/model recognition
-    # TODO: Maybe save (for instance) spectral images of sounds that failed
+    # TODO: Maybe save (for instance) spectral images of sound_generation that failed
 
     # Setup logging
     logging.basicConfig(filename='pitch_perception.log', level=logging.INFO)
 
+    n_channels = int(Config.get_config_option('n_channels'))
+
     # Set dependencies
-    transducer = BrianTransducer()
-    available_pitch_extractors = {'naive': NaivePitchExtractor, 'spectral': SpectralPitchExtractor(),
+    transducer = BrianTransducer(3000)
+    available_pitch_extractors = {'naive': NaivePitchExtractor, 'spectral': SpectralPitchExtractor(n_channels),
                                   'temporal': TemporalPitchExtractor}
     pitch_extractor = available_pitch_extractors[Config.get_config_option('pitch_extraction')]
 
