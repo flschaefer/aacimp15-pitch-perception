@@ -16,3 +16,12 @@ class Transducer(object):
         :return: An array of neuronal spikes
         """
         pass
+
+    def get_cochleogram(self, samples, sample_rate):
+        """
+        Computes the motion output of cochlea
+        :param samples: An array of audio samples
+        :param sample_rate: The sample rate of the audio signal
+        :return: A ndarray (time*freq)
+        """
+        pass

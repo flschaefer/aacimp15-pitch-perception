@@ -4,6 +4,7 @@ from brian.hears import *
 from transducer import Transducer
 
 import numpy as np
+from matplotlib import pyplot as plt
 
 
 class BrianTransducer(Transducer):
@@ -11,7 +12,7 @@ class BrianTransducer(Transducer):
     A computational model of the human's hearing transduction stage, using the functionality of the brian library
     """
 
-    def __init__(self, n_channels=3000.):
+    def __init__(self, n_channels=300.):
         self.n_channels = n_channels
 
     def get_spikes(self,samples, sample_rate):
@@ -34,9 +35,18 @@ class BrianTransducer(Transducer):
 
         anf = FilterbankGroup(ihc, 'I', eqs, reset=0, threshold=1, refractory=5*ms)
         M = SpikeMonitor(anf)
-
+        run(sound.duration)
         return M.spikes
 
+    def get_cochleogram(self,samples, sample_rate):
+
+        cf = erbspace(20*Hz, 20*kHz, self.n_channels)
+        sound = Sound(samples, samplerate=sample_rate*Hz)
+        fb = Gammatone(sound, cf)
+        output = fb.process()
+        f = lambda x: 3 * clip(x, 0, Inf) ** (1.0/3.0)
+        a = f(output)
+        return a
 
 if __name__ == '__main__':
 
@@ -51,6 +61,8 @@ if __name__ == '__main__':
 
     transducer = BrianTransducer()
 
-    s = transducer.get_spikes(samples,sample_rate)
+    #s = transducer.get_spikes(samples,sample_rate)
+    c = transducer.get_cochleogram(samples,sample_rate)
 
-    print s
+    plt.imshow(c,aspect='auto')
+    plt.show()
